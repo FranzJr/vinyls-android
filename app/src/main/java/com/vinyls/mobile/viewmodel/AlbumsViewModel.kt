@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.vinyls.mobile.dto.AlbumDTO
+import com.vinyls.mobile.dto.TrackDTO
 import com.vinyls.mobile.model.Album
 import com.vinyls.mobile.repository.AlbumRepository
 import com.vinyls.mobile.repository.impl.AlbumRepositoryImpl
@@ -25,6 +26,26 @@ class AlbumsViewModel(): ViewModel() {
                 albums.postValue(albumsData!!.asSequence().map { a -> AlbumUtil().DTOtoEntity(a) }.toList())
             }
         }
+    }
+
+    fun saveAlbum(album: AlbumDTO){
+
+        viewModelScope.launch {
+            albumRepository.saveAlbum(album)
+            Log.i("INFORMATION DEVELOPER", "Resultant: $album")
+            getAllAlbums()
+        }
+
+    }
+
+    fun saveTrack(albumId: Int, trackDTO: TrackDTO){
+
+        viewModelScope.launch {
+            val result = albumRepository.saveTrack(albumId, trackDTO)
+            Log.i("INFORMATION DEVELOPER", "Resultant: $result")
+            getAllAlbums()
+        }
+
     }
 
 }
